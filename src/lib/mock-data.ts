@@ -1,16 +1,20 @@
-export interface File {
+export type File = {
 	id: string;
 	name: string;
-	type: "file" | "folder";
-	url?: string;
+	type: "file";
+	url: string;
+	parent: string;
+	size: string;
+};
+
+export type Folder = {
+	id: string;
+	name: string;
+	type: "folder";
 	parent: string | null;
-	size?: string;
-}
+};
 
 export const mockFiles: File[] = [
-	{ id: "1", name: "Documents", type: "folder", parent: null },
-	{ id: "2", name: "Images", type: "folder", parent: null },
-	{ id: "3", name: "Work", type: "folder", parent: null },
 	{
 		id: "4",
 		name: "Resume.pdf",
@@ -43,7 +47,7 @@ export const mockFiles: File[] = [
 		parent: "2",
 		size: "1.8 MB",
 	},
-	{ id: "8", name: "Presentations", type: "folder", parent: "3" },
+
 	{
 		id: "9",
 		name: "Q4 Report.pptx",
@@ -60,4 +64,12 @@ export const mockFiles: File[] = [
 		parent: "3",
 		size: "1.5 MB",
 	},
+];
+
+export const mockFolders: Folder[] = [
+	{ id: "0", name: "Root", type: "folder", parent: null },
+	{ id: "1", name: "Documents", type: "folder", parent: "0" },
+	{ id: "2", name: "Images", type: "folder", parent: "0" },
+	{ id: "3", name: "Work", type: "folder", parent: "0" },
+	{ id: "8", name: "Presentations", type: "folder", parent: "3" },
 ];
