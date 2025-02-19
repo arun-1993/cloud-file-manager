@@ -1,32 +1,46 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
+import {
+	bigint,
+	index,
+	singlestoreTableCreator,
+	text,
+	tinyint,
+} from "drizzle-orm/singlestore-core";
 
-import { sql } from "drizzle-orm";
-import { index, int, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
-
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = sqliteTableCreator(
+export const createTable = singlestoreTableCreator(
 	(name) => `cloud-file-manager_${name}`,
 );
 
-export const posts = createTable(
-	"post",
+export const files = createTable(
+	"files",
 	{
-		id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-		name: text("name", { length: 256 }),
-		createdAt: int("created_at", { mode: "timestamp" })
-			.default(sql`(unixepoch())`)
-			.notNull(),
-		updatedAt: int("updated_at", { mode: "timestamp" }).$onUpdate(
-			() => new Date(),
-		),
+		id: bigint("id", { mode: "number", unsigned: true })
+			.primaryKey()
+			.autoincrement(),
+		name: text("name").notNull(),
+		parent: bigint("parent", { mode: "number", unsigned: true }).notNull(),
+		size: bigint("size", { mode: "number", unsigned: true }).notNull(),
+		url: text("url").notNull(),
 	},
-	(example) => ({
-		nameIndex: index("name_idx").on(example.name),
-	}),
+	(table) => [index("parent_index").on(table.parent)],
 );
+
+export const folders = createTable(
+	"folders",
+	{
+		id: bigint("id", { mode: "number", unsigned: true })
+			.notNull()
+			.primaryKey()
+			.autoincrement(),
+		name: text("name").notNull(),
+		parent: bigint("parent", { mode: "number", unsigned: true }),
+	},
+	(table) => [index("parent_index").on(table.parent)],
+);
+
+export const users = createTable("users", {
+	id: bigint("id", { mode: "number", unsigned: true })
+		.primaryKey()
+		.autoincrement(),
+	name: text("name"),
+	age: tinyint("age"),
+});

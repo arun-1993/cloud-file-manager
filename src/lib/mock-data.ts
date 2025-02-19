@@ -1,63 +1,67 @@
-export interface File {
-	id: string;
+export type File = {
+	id: number;
 	name: string;
-	type: "file" | "folder";
-	url?: string;
-	parent: string | null;
-	size?: string;
-}
+	parent: number;
+	size: number;
+	url: string;
+};
+
+export type Folder = {
+	id: number;
+	name: string;
+	parent: number | null;
+};
 
 export const mockFiles: File[] = [
-	{ id: "1", name: "Documents", type: "folder", parent: null },
-	{ id: "2", name: "Images", type: "folder", parent: null },
-	{ id: "3", name: "Work", type: "folder", parent: null },
 	{
-		id: "4",
+		id: 5,
 		name: "Resume.pdf",
-		type: "file",
+		parent: 2,
+		size: 1258291,
 		url: "/files/resume.pdf",
-		parent: "1",
-		size: "1.2 MB",
 	},
 	{
-		id: "5",
+		id: 6,
 		name: "Project Proposal.docx",
-		type: "file",
+		parent: 2,
+		size: 2621440,
 		url: "/files/proposal.docx",
-		parent: "1",
-		size: "2.5 MB",
 	},
 	{
-		id: "6",
+		id: 7,
 		name: "Vacation.jpg",
-		type: "file",
+		parent: 3,
+		size: 3879731,
 		url: "/files/vacation.jpg",
-		parent: "2",
-		size: "3.7 MB",
 	},
 	{
-		id: "7",
+		id: 8,
 		name: "Profile Picture.png",
-		type: "file",
+		parent: 3,
+		size: 1887436,
 		url: "/files/profile.png",
-		parent: "2",
-		size: "1.8 MB",
 	},
-	{ id: "8", name: "Presentations", type: "folder", parent: "3" },
+
 	{
-		id: "9",
+		id: 10,
 		name: "Q4 Report.pptx",
-		type: "file",
+		parent: 9,
+		size: 5452595,
 		url: "/files/q4-report.pptx",
-		parent: "8",
-		size: "5.2 MB",
 	},
 	{
-		id: "10",
+		id: 11,
 		name: "Budget.xlsx",
-		type: "file",
+		parent: 4,
+		size: 1572864,
 		url: "/files/budget.xlsx",
-		parent: "3",
-		size: "1.5 MB",
 	},
+];
+
+export const mockFolders: Folder[] = [
+	{ id: 1, name: "Root", parent: null },
+	{ id: 2, name: "Documents", parent: 1 },
+	{ id: 3, name: "Images", parent: 1 },
+	{ id: 4, name: "Work", parent: 1 },
+	{ id: 9, name: "Presentations", parent: 4 },
 ];
