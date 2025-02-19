@@ -1,9 +1,22 @@
 import { FileIcon, Folder as FolderIcon } from "lucide-react";
 import Link from "next/link";
-import type { File, Folder } from "~/lib/mock-data";
+import type { files, folders } from "~/server/db/schema";
 
-export function FileRow(props: { file: File }) {
+export function FileRow(props: { file: typeof files.$inferSelect }) {
 	const { file } = props;
+
+	const getFileSize = () => {
+		const units = ["B", "KB", "MB", "GB"];
+		let size = file.size;
+
+		for (const unit of units) {
+			if (size < 1024) return `${Math.round(size * 100) / 100} ${unit}`;
+			size /= 1024;
+		}
+
+		return `${size} GB`;
+	};
+
 	return (
 		<li
 			key={file.id}
@@ -21,17 +34,18 @@ export function FileRow(props: { file: File }) {
 					</Link>
 				</div>
 				<div className="col-span-3 text-gray-400">File</div>
-				<div className="col-span-3 text-gray-400">{file.size}</div>
+				<div className="col-span-3 text-gray-400">{getFileSize()}</div>
 			</div>
 		</li>
 	);
 }
 
 export function FolderRow(props: {
-	folder: Folder;
+	folder: typeof folders.$inferSelect;
 	handleFolderClick: () => void;
 }) {
 	const { folder, handleFolderClick } = props;
+
 	return (
 		<li
 			key={folder.id}
