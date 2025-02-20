@@ -6,6 +6,25 @@ import {
 	folders as foldersSchema,
 } from "~/server/db/schema";
 
+async function getParents(folderId: number) {
+	const parents = [];
+	let currentId: number | null = folderId;
+
+	while (currentId !== null) {
+		const folder = await db
+			.select()
+			.from(foldersSchema)
+			.where(eq(foldersSchema.id, currentId));
+
+		if (folder[0]) {
+			parents.unshift(folder[0]);
+			currentId = folder[0]?.parent;
+		}
+	}
+
+	return parents;
+}
+
 export default async function DrivePage(props: {
 	params: Promise<{ folderId: string }>;
 }) {
@@ -13,18 +32,25 @@ export default async function DrivePage(props: {
 
 	if (isNaN(folderId)) return <div>Invalid folderId</div>;
 
-	const files = await db
+	const filesFetch = db
 		.select()
 		.from(filesSchema)
 		.where(eq(filesSchema.parent, folderId))
 		.orderBy(filesSchema.name);
-	const folders = await db
+
+	const foldersFetch = db
 		.select()
 		.from(foldersSchema)
 		.where(eq(foldersSchema.parent, folderId))
 		.orderBy(foldersSchema.name);
 
-	console.log(folderId);
+	const parentsFetch = getParents(folderId);
 
-	return <DriveContents files={files} folders={folders} />;
+	const [files, folders, parents] = await Promise.all([
+		filesFetch,
+		foldersFetch,
+		parentsFetch,
+	]);
+
+	return <DriveContents files={files} folders={folders} parents={parents} />;
 }

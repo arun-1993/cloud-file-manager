@@ -2,7 +2,6 @@
 
 import { ChevronRight, Upload } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import type { files, folders } from "~/server/db/schema";
 import { FileRow, FolderRow } from "./drive-row";
@@ -10,26 +9,9 @@ import { FileRow, FolderRow } from "./drive-row";
 export default function DriveContents(props: {
 	files: (typeof files.$inferSelect)[];
 	folders: (typeof folders.$inferSelect)[];
+	parents: (typeof folders.$inferSelect)[];
 }) {
-	const { files, folders } = props;
-	const [currentFolder, setCurrentFolder] = useState(1);
-
-	const breadcrumbs = useMemo(() => {
-		const breadcrumbs = [];
-		let currentId = currentFolder;
-
-		while (currentId !== 1) {
-			const folder = folders.find((folder) => folder.id === currentId);
-			if (folder) {
-				breadcrumbs.unshift(folder);
-				currentId = folder.parent ?? 1;
-			} else {
-				break;
-			}
-		}
-
-		return breadcrumbs;
-	}, [currentFolder, folders]);
+	const { files, folders, parents } = props;
 
 	const handleUpload = () => {
 		alert("Upload functionality would be implemented here");
@@ -41,25 +23,31 @@ export default function DriveContents(props: {
 				<div className="mb-6 flex items-center justify-between">
 					<div className="flex items-center">
 						<Link
-							href={"/folder/1"}
+							href={`/folder/${parents[0]?.id}`}
 							className="mr-2 text-gray-300 hover:text-gray-700"
 						>
 							My Drive
 						</Link>
-						{breadcrumbs.map((folder) => (
-							<div key={folder.id} className="flex items-center">
-								<ChevronRight
-									className="mx-2 text-gray-500"
-									size={16}
-								/>
-								<Link
-									href=""
-									className="text-gray-300 hover:text-gray-700"
-								>
-									{folder.name}
-								</Link>
-							</div>
-						))}
+						{parents.map(
+							(folder, i) =>
+								i > 0 && (
+									<div
+										key={folder.id}
+										className="flex items-center"
+									>
+										<ChevronRight
+											className="mx-2 text-gray-500"
+											size={16}
+										/>
+										<Link
+											href={`/folder/${folder.id}`}
+											className="text-gray-300 hover:text-gray-700"
+										>
+											{folder.name}
+										</Link>
+									</div>
+								),
+						)}
 					</div>
 					<Button
 						onClick={handleUpload}
