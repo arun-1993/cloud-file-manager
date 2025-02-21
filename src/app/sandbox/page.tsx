@@ -1,7 +1,7 @@
 import { mockFiles, mockFolders } from "~/lib/mock-data";
 import { devOnly } from "~/lib/utils";
 import { db } from "~/server/db";
-import { files, folders } from "~/server/db/schema";
+import { filesTable, foldersTable } from "~/server/db/schema";
 
 export default function SandboxPage() {
 	devOnly();
@@ -14,15 +14,15 @@ export default function SandboxPage() {
 					"use server";
 
 					// eslint-disable-next-line drizzle/enforce-delete-with-where
-					const foldersDelete = await db.delete(folders);
+					const foldersDelete = await db.delete(foldersTable);
 					const foldersInsert = await db
-						.insert(folders)
+						.insert(foldersTable)
 						.values(mockFolders);
 
 					// eslint-disable-next-line drizzle/enforce-delete-with-where
-					const filesDelete = await db.delete(files);
+					const filesDelete = await db.delete(filesTable);
 					const filesInsert = await db
-						.insert(files)
+						.insert(filesTable)
 						.values(mockFiles);
 
 					console.log({

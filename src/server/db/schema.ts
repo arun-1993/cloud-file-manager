@@ -10,7 +10,7 @@ export const createTable = singlestoreTableCreator(
 	(name) => `cloud-file-manager_${name}`,
 );
 
-export const files = createTable(
+export const filesTable = createTable(
 	"files",
 	{
 		id: bigint("id", { mode: "number", unsigned: true })
@@ -24,7 +24,7 @@ export const files = createTable(
 	(table) => [index("parent_index").on(table.parent)],
 );
 
-export const folders = createTable(
+export const foldersTable = createTable(
 	"folders",
 	{
 		id: bigint("id", { mode: "number", unsigned: true })
@@ -37,7 +37,7 @@ export const folders = createTable(
 	(table) => [index("parent_index").on(table.parent)],
 );
 
-export const users = createTable("users", {
+export const usersTable = createTable("users", {
 	id: bigint("id", { mode: "number", unsigned: true })
 		.primaryKey()
 		.autoincrement(),

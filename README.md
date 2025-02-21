@@ -3,6 +3,7 @@
 ## TODO
 
 - [x] Set up database and data model
-- [ ] Lift up the folder open state to the URL
+- [x] Use dynamic routing instead of client side state
 - [ ] Add authentication
 - [ ] Add file uploading
+- [ ] Add analytics
