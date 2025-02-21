@@ -1,38 +1,17 @@
 "use client";
 
 import { ChevronRight, Upload } from "lucide-react";
-import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import type { files, folders } from "~/server/db/schema";
+import type { filesTable, foldersTable } from "~/server/db/schema";
 import { FileRow, FolderRow } from "./drive-row";
 
 export default function DriveContents(props: {
-	files: (typeof files.$inferSelect)[];
-	folders: (typeof folders.$inferSelect)[];
+	files: (typeof filesTable.$inferSelect)[];
+	folders: (typeof foldersTable.$inferSelect)[];
+	parents: (typeof foldersTable.$inferSelect)[];
 }) {
-	const { files, folders } = props;
-	const [currentFolder, setCurrentFolder] = useState(1);
-
-	const breadcrumbs = useMemo(() => {
-		const breadcrumbs = [];
-		let currentId = currentFolder;
-
-		while (currentId !== 1) {
-			const folder = folders.find((folder) => folder.id === currentId);
-			if (folder) {
-				breadcrumbs.unshift(folder);
-				currentId = folder.parent ?? 1;
-			} else {
-				break;
-			}
-		}
-
-		return breadcrumbs;
-	}, [currentFolder, folders]);
-
-	const handleFolderClick = (folderId: number) => {
-		setCurrentFolder(folderId);
-	};
+	const { files, folders, parents } = props;
 
 	const handleUpload = () => {
 		alert("Upload functionality would be implemented here");
@@ -43,28 +22,32 @@ export default function DriveContents(props: {
 			<div className="mx-auto max-w-6xl">
 				<div className="mb-6 flex items-center justify-between">
 					<div className="flex items-center">
-						<Button
-							onClick={() => setCurrentFolder(1)}
-							variant="ghost"
+						<Link
+							href={`/folder/${parents[0]?.id}`}
 							className="mr-2 text-gray-300 hover:text-gray-700"
 						>
 							My Drive
-						</Button>
-						{breadcrumbs.map((folder) => (
-							<div key={folder.id} className="flex items-center">
-								<ChevronRight
-									className="mx-2 text-gray-500"
-									size={16}
-								/>
-								<Button
-									onClick={() => handleFolderClick(folder.id)}
-									variant="ghost"
-									className="text-gray-300 hover:text-gray-700"
-								>
-									{folder.name}
-								</Button>
-							</div>
-						))}
+						</Link>
+						{parents.map(
+							(folder, i) =>
+								i > 0 && (
+									<div
+										key={folder.id}
+										className="flex items-center"
+									>
+										<ChevronRight
+											className="mx-2 text-gray-500"
+											size={16}
+										/>
+										<Link
+											href={`/folder/${folder.id}`}
+											className="text-gray-300 hover:text-gray-700"
+										>
+											{folder.name}
+										</Link>
+									</div>
+								),
+						)}
 					</div>
 					<Button
 						onClick={handleUpload}
@@ -83,23 +66,13 @@ export default function DriveContents(props: {
 						</div>
 					</div>
 					<ul>
-						{folders
-							.filter((folder) => folder.parent === currentFolder)
-							.map((folder) => (
-								<FolderRow
-									folder={folder}
-									handleFolderClick={() =>
-										handleFolderClick(folder.id)
-									}
-									key={folder.id}
-								/>
-							))}
+						{folders.map((folder) => (
+							<FolderRow folder={folder} key={folder.id} />
+						))}
 
-						{files
-							.filter((file) => file.parent === currentFolder)
-							.map((file) => (
-								<FileRow file={file} key={file.id} />
-							))}
+						{files.map((file) => (
+							<FileRow file={file} key={file.id} />
+						))}
 					</ul>
 				</div>
 			</div>
