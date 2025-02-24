@@ -24,6 +24,8 @@ export const filesTable = createTable(
 	(table) => [index("parent_index").on(table.parent)],
 );
 
+export type DbFileType = typeof filesTable.$inferSelect;
+
 export const foldersTable = createTable(
 	"folders",
 	{
@@ -37,6 +39,8 @@ export const foldersTable = createTable(
 	(table) => [index("parent_index").on(table.parent)],
 );
 
+export type DbFolderType = typeof foldersTable.$inferSelect;
+
 export const usersTable = createTable("users", {
 	id: bigint("id", { mode: "number", unsigned: true })
 		.primaryKey()
@@ -44,3 +48,5 @@ export const usersTable = createTable("users", {
 	name: text("name"),
 	age: tinyint("age"),
 });
+
+export type DbUserType = typeof usersTable.$inferSelect;
