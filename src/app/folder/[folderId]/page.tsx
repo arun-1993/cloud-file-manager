@@ -14,5 +14,12 @@ export default async function DrivePage(props: {
 		read.parents(folderId),
 	]);
 
-	return <DriveContents files={files} folders={folders} parents={parents} />;
+	return (
+		<DriveContents
+			files={files}
+			folders={folders}
+			parents={parents}
+			currentFolder={folderId}
+		/>
+	);
 }
