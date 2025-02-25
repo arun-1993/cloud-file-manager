@@ -12,7 +12,7 @@ export default function PostHogProvider({
 	useEffect(() => {
 		posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
 			api_host: "/ingest",
-			ui_host: "<ph_app_host>",
+			ui_host: env.NEXT_PUBLIC_POSTHOG_HOST,
 			person_profiles: "always",
 		});
 	}, []);
@@ -24,6 +24,3 @@ export default function PostHogProvider({
 		</PHProvider>
 	);
 }
-
-// ui_host: "https://us.i.posthog.com"
-// ui_host: "<ph_app_host>"

@@ -6,4 +6,6 @@
 - [x] Use dynamic routing instead of client side state
 - [x] Add authentication
 - [x] Add file uploading
-- [ ] Add analytics
+- [x] Add analytics
+- [ ] Add delete
+- [ ] Real homepage + onboarding
