@@ -1,5 +1,5 @@
-import DriveContents from "~/app/drive-contents";
 import { read } from "~/server/db/queries";
+import DriveContents from "./drive-contents";
 
 export default async function DrivePage(props: {
 	params: Promise<{ folderId: string }>;
